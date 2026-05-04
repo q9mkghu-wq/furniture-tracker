@@ -57,10 +57,10 @@ function Card({ label, value, color }) {
 const styles = {
   row2: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' },
   row3: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px', marginBottom: '10px' },
-  card: { background: '#f5f5f5', borderRadius: '8px', padding: '10px 12px', textAlign: 'center' },
-  cardLabel: { fontSize: '11px', color: '#888', marginBottom: '3px' },
-  cardValue: { fontSize: '14px', fontWeight: 500 },
-  netCard: { borderRadius: '8px', padding: '12px', textAlign: 'center', marginBottom: '0' },
-  netLabel: { fontSize: '11px', color: '#888', marginBottom: '3px' },
-  netValue: { fontSize: '16px', fontWeight: 500 },
+  card: { background: '#f5f5f5', borderRadius: '8px', padding: '14px 16px', textAlign: 'center' },
+  cardLabel: { fontSize: '15px', color: '#666', marginBottom: '6px' },
+  cardValue: { fontSize: '22px', fontWeight: 500 },
+  netCard: { borderRadius: '8px', padding: '16px', textAlign: 'center' },
+  netLabel: { fontSize: '16px', color: '#666', marginBottom: '6px' },
+  netValue: { fontSize: '28px', fontWeight: 500 },
 }
