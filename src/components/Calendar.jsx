@@ -91,4 +91,25 @@ export default function Calendar({ viewYear, viewMonth, data, selectedKey, onSel
       <div style={styles.nav}>
         <button style={styles.navBtn} onClick={() => onChangeMonth(-1)}>◀</button>
         <span style={styles.title}>{viewYear}년 {viewMonth + 1}월</span>
-        <button style={styles.navBtn} onClick={
+        <button style={styles.navBtn} onClick={() => onChangeMonth(1)}>▶</button>
+      </div>
+      <div style={styles.grid}>
+        {days.map(d => <div key={d} style={styles.header}>{d}</div>)}
+        {cells}
+      </div>
+    </div>
+  )
+}
+
+const styles = {
+  nav: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' },
+  title: { fontSize: '18px', fontWeight: 500 },
+  navBtn: { background: 'none', border: '0.5px solid #ccc', borderRadius: '8px', padding: '6px 14px', cursor: 'pointer', fontSize: '14px' },
+  grid: { display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '3px' },
+  header: { textAlign: 'center', fontSize: '11px', color: '#888', padding: '4px 0', fontWeight: 500 },
+  day: { minHeight: '64px', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '5px 2px 4px', borderRadius: '8px', gap: '2px' },
+  dayEmpty: { minHeight: '64px', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '5px 2px 4px', borderRadius: '8px' },
+  dayNum: { fontSize: '12px', color: '#888', lineHeight: 1 },
+  calAmt: { fontSize: '9.5px', fontWeight: 500, lineHeight: 1.2, textAlign: 'center' },
+  calNet: { fontSize: '9px', lineHeight: 1.2, textAlign: 'center', borderTop: '0.5px solid rgba(0,0,0,0.1)', paddingTop: '2px', width: '100%' },
+}
