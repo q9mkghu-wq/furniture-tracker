@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { db } from './firebase'
 import {
-  collection, doc, setDoc, deleteDoc, getDocs, query, where
+  collection, doc, setDoc, deleteDoc, getDocs
 } from 'firebase/firestore'
 import Calendar from './components/Calendar.jsx'
 import Summary from './components/Summary.jsx'
@@ -13,22 +13,20 @@ export default function App() {
   const [viewYear, setViewYear] = useState(new Date().getFullYear())
   const [viewMonth, setViewMonth] = useState(new Date().getMonth())
   const [selectedKey, setSelectedKey] = useState(null)
+  const [loaded, setLoaded] = useState(false)
 
   const prefix = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}`
 
   useEffect(() => {
-    fetchMonth()
-  }, [viewYear, viewMonth])
+    fetchAll()
+  }, [])
 
-  async function fetchMonth() {
-    const q = query(
-      collection(db, 'entries'),
-      where('month', '==', prefix)
-    )
-    const snap = await getDocs(q)
+  async function fetchAll() {
+    const snap = await getDocs(collection(db, 'entries'))
     const result = {}
     snap.forEach(d => { result[d.id] = d.data() })
-    setData(prev => ({ ...prev, ...result }))
+    setData(result)
+    setLoaded(true)
   }
 
   async function saveEntry(key, entry) {
@@ -53,6 +51,12 @@ export default function App() {
     setViewMonth(m)
     setViewYear(y)
   }
+
+  if (!loaded) return (
+    <div style={{ textAlign: 'center', padding: '3rem', color: '#888', fontSize: '16px' }}>
+      불러오는 중...
+    </div>
+  )
 
   return (
     <div>
