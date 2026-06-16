@@ -4,6 +4,7 @@ export default function EntryPanel({ selectedKey, data, onSave, onDelete }) {
   const [bank, setBank] = useState('')
   const [cash, setCash] = useState('')
   const [factory, setFactory] = useState('')
+  const [stock, setStock] = useState('')
   const [expenses, setExpenses] = useState([])
   const [saved, setSaved] = useState(false)
 
@@ -13,6 +14,7 @@ export default function EntryPanel({ selectedKey, data, onSave, onDelete }) {
     setBank(e.bank || '')
     setCash(e.cash || '')
     setFactory(e.factory || '')
+    setStock(e.stock || '')
     setExpenses(e.expenses || [])
   }, [selectedKey, data])
 
@@ -50,6 +52,7 @@ export default function EntryPanel({ selectedKey, data, onSave, onDelete }) {
       bank: parseFloat(bank) || 0,
       cash: parseFloat(cash) || 0,
       factory: parseFloat(factory) || 0,
+      stock: parseFloat(stock) || 0,
       expenses: expenses.filter(e => e.name || parseFloat(e.amount) > 0).map(e => ({
         name: e.name,
         amount: parseFloat(e.amount) || 0,
@@ -64,7 +67,7 @@ export default function EntryPanel({ selectedKey, data, onSave, onDelete }) {
 
   async function handleDelete() {
     await onDelete(selectedKey)
-    setBank(''); setCash(''); setFactory(''); setExpenses([])
+    setBank(''); setCash(''); setFactory(''); setStock(''); setExpenses([])
   }
 
   return (
@@ -76,6 +79,10 @@ export default function EntryPanel({ selectedKey, data, onSave, onDelete }) {
       <IncomeRow icon="🏦" iconBg="#E6F1FB" label="계좌 입금" value={bank} onChange={setBank} />
       <IncomeRow icon="💵" iconBg="#EAF3DE" label="현금" value={cash} onChange={setCash} />
       <IncomeRow icon="🏭" iconBg="#FAEEDA" label="공장 선불" value={factory} onChange={setFactory} />
+
+      <div style={styles.sectionLabel}>주식 투자</div>
+
+      <IncomeRow icon="📈" iconBg="#E0EEFA" label="주식 계좌 입금" value={stock} onChange={setStock} />
 
       <div style={styles.sectionLabel}>지출</div>
 
