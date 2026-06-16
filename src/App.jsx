@@ -7,6 +7,7 @@ import Calendar from './components/Calendar.jsx'
 import Summary from './components/Summary.jsx'
 import EntryPanel from './components/EntryPanel.jsx'
 import DayList from './components/DayList.jsx'
+import StockTotal from './components/StockTotal.jsx'
 
 export default function App() {
   const [data, setData] = useState({})
@@ -60,6 +61,7 @@ export default function App() {
 
   return (
     <div>
+      <StockTotal data={data} />
       <Calendar
         viewYear={viewYear}
         viewMonth={viewMonth}
