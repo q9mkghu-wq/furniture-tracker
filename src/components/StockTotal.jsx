@@ -1,18 +1,18 @@
-export default function StockTotal({ data }) {
+export default function StockTotal({ data, prefix }) {
   let totalStock = 0
   let monthStock = 0
-  const today = new Date()
-  const thisPrefix = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`
 
   Object.keys(data).forEach(k => {
     const stock = data[k].stock || 0
     totalStock += stock
-    if (k.startsWith(thisPrefix)) monthStock += stock
+    if (k.startsWith(prefix)) monthStock += stock
   })
 
   function fmtFull(n) {
     return Math.round(n || 0).toLocaleString('ko-KR') + '원'
   }
+
+  const [year, month] = prefix.split('-')
 
   return (
     <div style={styles.wrap}>
@@ -23,7 +23,7 @@ export default function StockTotal({ data }) {
       </div>
       <div style={styles.divider}></div>
       <div style={styles.col}>
-        <div style={styles.label}>이번 달 입금</div>
+        <div style={styles.label}>{parseInt(month)}월 입금</div>
         <div style={styles.month}>{fmtFull(monthStock)}</div>
       </div>
     </div>
