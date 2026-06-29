@@ -61,7 +61,7 @@ export default function App() {
 
   return (
     <div>
-      <StockTotal data={data} />
+      <StockTotal data={data} prefix={prefix} />
       <Calendar
         viewYear={viewYear}
         viewMonth={viewMonth}
