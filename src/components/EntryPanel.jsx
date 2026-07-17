@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 
+const PRESET_EXPENSES = ['기름값', '간식비']
+
 export default function EntryPanel({ selectedKey, data, onSave, onDelete }) {
   const [bank, setBank] = useState('')
   const [cash, setCash] = useState('')
@@ -35,8 +37,8 @@ export default function EntryPanel({ selectedKey, data, onSave, onDelete }) {
     return Math.round(n || 0).toLocaleString('ko-KR') + '원'
   }
 
-  function addExpense() {
-    setExpenses(prev => [...prev, { name: '', amount: '', memo: '' }])
+  function addExpense(name = '') {
+    setExpenses(prev => [...prev, { name, amount: '', memo: '' }])
   }
 
   function updateExpense(i, field, value) {
@@ -45,6 +47,10 @@ export default function EntryPanel({ selectedKey, data, onSave, onDelete }) {
 
   function removeExpense(i) {
     setExpenses(prev => prev.filter((_, idx) => idx !== i))
+  }
+
+  function isPresetAdded(name) {
+    return expenses.some(e => e.name === name)
   }
 
   async function handleSave() {
@@ -75,16 +81,38 @@ export default function EntryPanel({ selectedKey, data, onSave, onDelete }) {
       <div style={styles.title}>{title}</div>
 
       <div style={styles.sectionLabel}>수입</div>
-
       <IncomeRow icon="🏦" iconBg="#E6F1FB" label="계좌 입금" value={bank} onChange={setBank} />
       <IncomeRow icon="💵" iconBg="#EAF3DE" label="현금" value={cash} onChange={setCash} />
       <IncomeRow icon="🏭" iconBg="#FAEEDA" label="공장 선불" value={factory} onChange={setFactory} />
 
       <div style={styles.sectionLabel}>주식 투자</div>
-
       <IncomeRow icon="📈" iconBg="#E0EEFA" label="주식 계좌 입금" value={stock} onChange={setStock} />
 
       <div style={styles.sectionLabel}>지출</div>
+
+      <div style={styles.presetRow}>
+        {PRESET_EXPENSES.map(name => {
+          const added = isPresetAdded(name)
+          return (
+            <button
+              key={name}
+              style={{ ...styles.presetBtn, ...(added ? styles.presetBtnActive : {}) }}
+              onClick={() => {
+                if (added) {
+                  setExpenses(prev => prev.filter(e => e.name !== name))
+                } else {
+                  addExpense(name)
+                }
+              }}
+            >
+              {added ? '✓ ' : '+ '}{name}
+            </button>
+          )
+        })}
+        <button style={styles.presetBtn} onClick={() => addExpense('')}>
+          + 직접 입력
+        </button>
+      </div>
 
       {expenses.map((e, i) => (
         <div key={i} style={styles.expenseItem}>
@@ -93,7 +121,7 @@ export default function EntryPanel({ selectedKey, data, onSave, onDelete }) {
             <input
               style={styles.expenseNameInput}
               type="text"
-              placeholder="항목명 (예: 기름값)"
+              placeholder="항목명"
               value={e.name}
               onChange={ev => updateExpense(i, 'name', ev.target.value)}
             />
@@ -117,8 +145,6 @@ export default function EntryPanel({ selectedKey, data, onSave, onDelete }) {
           />
         </div>
       ))}
-
-      <button style={styles.addExpenseBtn} onClick={addExpense}>+ 지출 항목 추가</button>
 
       <div style={styles.totalsRow}>
         <TotalBox label="수입 합계" value={fmtFull(totalIncome)} color="#3B6D11" />
@@ -176,6 +202,9 @@ const styles = {
   incomeName: { fontSize: '12px', color: '#666' },
   incomeInput: { flex: 1, border: '0.5px solid #ddd', borderRadius: '8px', padding: '6px 10px', fontSize: '14px', minWidth: 0 },
   currency: { fontSize: '13px', color: '#888', flexShrink: 0 },
+  presetRow: { display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '10px' },
+  presetBtn: { background: '#f5f5f5', border: '0.5px solid #ddd', borderRadius: '20px', padding: '6px 14px', fontSize: '13px', color: '#555', cursor: 'pointer' },
+  presetBtnActive: { background: '#E6F1FB', border: '0.5px solid #185FA5', color: '#185FA5', fontWeight: 500 },
   expenseItem: { border: '0.5px solid #eee', borderRadius: '8px', padding: '10px', marginBottom: '8px', background: '#fafafa' },
   expenseTop: { display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '7px' },
   expenseIcon: { width: '24px', height: '24px', borderRadius: '5px', background: '#FCEBEB', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', flexShrink: 0 },
@@ -183,7 +212,6 @@ const styles = {
   expenseAmtInput: { width: '100px', border: '0.5px solid #ddd', borderRadius: '8px', padding: '5px 9px', fontSize: '13px', flexShrink: 0 },
   memoInput: { width: '100%', border: '0.5px solid #ddd', borderRadius: '8px', padding: '5px 9px', fontSize: '12px', color: '#666' },
   removeBtn: { background: 'none', border: 'none', color: '#aaa', cursor: 'pointer', fontSize: '15px', padding: '0 2px', flexShrink: 0 },
-  addExpenseBtn: { background: 'none', border: '0.5px dashed #ccc', borderRadius: '8px', padding: '7px 12px', fontSize: '12px', color: '#888', cursor: 'pointer', width: '100%', marginTop: '2px' },
   totalsRow: { display: 'flex', gap: '10px', borderTop: '0.5px solid #eee', marginTop: '12px', paddingTop: '12px' },
   totalBox: { flex: 1, textAlign: 'center' },
   totalLabel: { fontSize: '11px', color: '#888', marginBottom: '3px' },
